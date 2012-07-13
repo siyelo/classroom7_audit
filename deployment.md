@@ -151,3 +151,66 @@ URL: www.classroom7.com
 
 *
 
+
+
+
+= Rails Deployment Audit
+
+  * http://blog.siyelo.com/rails-deployment-audit
+
+== Extract sensitive data
+
+  All sensitive data like passwords, API keys & tokens that are in the application are extracted as environment variables outside of the source code repository. If using rbevn for managing rubies, there is a nice plugin for setting up environment variables rbenv-vars.
+
+  * https://github.com/sstephenson/rbenv
+  * https://github.com/sstephenson/rbenv-vars
+
+== Continuous Integration & Deployment
+
+  There are many great open source and commercial tools out there for Continuous Integration. We are using Jenkins CI to run our test suite and handle Continuous Deployment (if the tests are green) for our staging branch. For production releases, we suggest doing releases manually at a scheduled time with the whole team ready and available.
+
+  * http://jenkins-ci.org/
+  * https://www.ruby-toolbox.com/categories/continuous_integration
+
+== Deployment tools
+
+  Checkout gitploy - bare minimum, git-based tool for deployment, it is very simple & interesting
+
+  * https://github.com/brentd/gitploy
+
+== Server security
+
+  * http://library.linode.com/securing-your-server
+
+== Start clean on boot
+
+  All the services that are being used by the application need to start cleanly when the server boots up - there should be no need for manual intervention. If you are deploying to Ubuntu, update-rc.d is the tool to use. You can setup the init script links for a target script /etc/init.d/name with "sudo update-rc.d -f name defaults" and you can use foreman gem to manage Procfile-based process and export them to upstart easily for monitoring.
+
+  * http://manpages.ubuntu.com/manpages/precise/man8/update-rc.d.8.html
+  * http://michaelvanrooijen.com/articles/2011/06/08-managing-and-monitoring-your-ruby-application-with-foreman-and-upstart/
+
+  - Export from foreman to upstart with:
+    foreman export upstart /etc/init -a myapp -u deployer
+
+  - Start upstart script automatically on boot (add the following to the top of /etc/init/myapp.conf file)
+    start on runlevel [2345]
+
+  - If you want to automate with capistrano you can use sed:
+    sudo sed -i \"1 i start on runlevel [2345]\" /etc/init/myapp.conf"
+
+  - Setup unicorn init script https://gist.github.com/504875 to start on boot up
+
+== Failover
+
+  Test recovery procedure if server crashes
+
+== Application performance & Monitoring
+
+  New Relic have Availability monitoring similar to pingdom that will email you when server is down
+
+  * http://newrelic.com/features/availability-monitoring
+  * http://www.pingdom.com/
+
+== Data security
+
+  Setup SSL
